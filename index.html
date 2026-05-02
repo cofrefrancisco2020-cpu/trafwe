@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Trafwe — Restaurante en Malalcahuello, Chile. Un lugar de encuentro entre la naturaleza, el fuego y la gastronomía de montaña." />
+  <title>Trafwe — Lugar de Encuentro · Malalcahuello</title>
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- Preconnect fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     LOADER
+══════════════════════════════════ -->
+<div id="loader" role="status" aria-label="Cargando">
+  <div id="loader-name">TRAFWE</div>
+  <div id="loader-track"><div id="loader-fill"></div></div>
+  <div id="loader-pct">0%</div>
+</div>
+
+<!-- ══════════════════════════════════
+     HEADER
+══════════════════════════════════ -->
+<header>
+  <a href="#hero" class="logo-header" aria-label="Trafwe inicio">
+    <img src="assets/images/logo.png" alt="Trafwe logo" />
+    <span class="brand">TRAFWE</span>
+  </a>
+
+  <nav aria-label="Navegación principal">
+    <a href="#sobre">Nosotros</a>
+    <a href="#gastronomia">Gastronomía</a>
+    <a href="#cabanas">Cabañas</a>
+    <a href="#galeria">Galería</a>
+    <a href="#ubicacion" class="nav-cta">¿Cómo llegar?</a>
+  </nav>
+
+  <button class="burger" id="burger" aria-label="Menú" aria-expanded="false">
+    <span></span><span></span><span></span>
+  </button>
+</header>
+
+<!-- Mobile nav overlay -->
+<nav class="mobile-nav" id="mobile-nav" aria-label="Menú móvil">
+  <a href="#sobre">Nosotros</a>
+  <a href="#gastronomia">Gastronomía</a>
+  <a href="#cabanas">Cabañas</a>
+  <a href="#galeria">Galería</a>
+  <a href="#ubicacion">¿Cómo llegar?</a>
+</nav>
+
+<!-- ══════════════════════════════════
+     HERO
+══════════════════════════════════ -->
+<section id="hero">
+  <div class="hero-media">
+    <!--
+      Opción A — Video de fondo (recomendado si tienes un clip corto en bucle):
+      <video autoplay muted loop playsinline poster="assets/images/trafwe_foto_cielo.png">
+        <source src="assets/videos/scroll.mp4" type="video/mp4" />
+      </video>
+
+      Opción B — Imagen estática (activa por defecto):
+    -->
+    <img class="hero-img" src="assets/images/trafwe_foto_cielo.png" alt="Atardecer en Trafwe, Malalcahuello" />
+  </div>
+  <div class="hero-overlay"></div>
+
+  <div class="hero-content">
+    <img class="hero-logo" src="assets/images/logo.png" alt="Trafwe" />
+    <span class="hero-sup">Malalcahuello · Cordillera de Los Andes</span>
+    <h1 class="hero-title">Trafwe</h1>
+    <p class="hero-sub">Un lugar de encuentro en la montaña</p>
+    <div class="hero-btns">
+      <a href="https://maps.app.goo.gl/E2eqrYHEqk7Czc8T9" target="_blank" rel="noopener" class="btn-prim">Ver ubicación</a>
+      <a href="#concepto" class="btn-sec">Explorar</a>
+    </div>
+  </div>
+
+  <div class="scroll-hint" id="hero-scroll-hint" aria-hidden="true">
+    <div class="scroll-line"></div>
+    <span>Scroll</span>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     VIDEO SCROLL
+     ─────────────────────────────────
+     Configura data-total con el número
+     de frames que generaste con ffmpeg.
+     data-w / data-h = resolución de los frames.
+     Si data-total="0" o no hay frames,
+     se muestra automáticamente el video
+     como fallback.
+══════════════════════════════════ -->
+<section id="video-scroll"
+         data-total="0"
+         data-w="540"
+         data-h="960">
+
+  <div class="video-sticky">
+    <div class="video-frame">
+
+      <!-- Canvas para los frames (scroll animation) -->
+      <canvas id="frame-canvas" aria-hidden="true"></canvas>
+
+      <!-- Fallback: video normal (visible cuando no hay frames) -->
+      <video class="v-fallback" autoplay muted loop playsinline
+             aria-label="Video Trafwe">
+        <source src="assets/videos/scroll.mp4" type="video/mp4" />
+        <img src="assets/images/trafwe_foto_cielo.png" alt="Trafwe exterior" />
+      </video>
+
+      <!-- Captions que aparecen progresivamente -->
+      <div class="vscroll-captions" aria-hidden="true">
+        <p class="vcap">La montaña como escenario…</p>
+        <p class="vcap">El fuego como vínculo…</p>
+        <p class="vcap">La mesa como punto de encuentro.</p>
+        <p class="vcap">Bienvenido a Trafwe.</p>
+      </div>
+    </div>
+
+    <div class="vscroll-hint" aria-hidden="true">Desliza para explorar</div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     CONCEPTO
+══════════════════════════════════ -->
+<section id="concepto">
+  <div class="concepto-inner">
+    <span class="sec-label reveal">Nuestra identidad</span>
+    <h2 class="reveal d1">
+      Trafwe significa<br /><em>lugar de encuentro</em>
+    </h2>
+    <div class="divider reveal d2"></div>
+    <p class="reveal d2">
+      Nacimos en el corazón de la Cordillera de los Andes, en Malalcahuello,
+      donde la araucaria, el volcán y la nieve son parte del paisaje cotidiano.
+      Somos un espacio donde la naturaleza, el fuego y una gastronomía honesta
+      se reúnen para crear momentos que perduran.
+    </p>
+    <p class="reveal d3" style="margin-top:1.2rem;">
+      Cada plato, cada trago y cada rincón de Trafwe está pensado para que sientas
+      la calidez del sur de Chile, lejos del ruido, cerca de lo esencial.
+    </p>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     SOBRE TRAFWE
+══════════════════════════════════ -->
+<section id="sobre">
+  <div class="sobre-grid">
+    <div class="sobre-img reveal">
+      <img src="assets/images/logo_trafwe_exterior.png" alt="Logo Trafwe en el restaurante — Malalcahuello" loading="lazy" />
+    </div>
+    <div class="sobre-text">
+      <span class="sec-label reveal">Sobre nosotros</span>
+      <h2 class="reveal d1">
+        Restaurante de montaña<br />con alma sureña
+      </h2>
+      <p class="reveal d1">
+        Trafwe es un restaurante familiar ubicado en Malalcahuello, pequeño pueblo
+        al pie del volcán Lonquimay, en la región de la Araucanía. Aquí la madera,
+        la piedra y el fuego son los materiales con los que construimos nuestra
+        hospitalidad.
+      </p>
+      <p class="reveal d2">
+        Nuestra cocina celebra los productos locales: trucha de río, quesos
+        artesanales, hierbas de la cordillera. Todo elaborado con técnica y afecto,
+        sin artificios, con la honestidad del sur.
+      </p>
+      <div class="stats">
+        <div class="stat reveal d1">
+          <span class="stat-n">900</span>
+          <span class="stat-l">m.s.n.m.</span>
+        </div>
+        <div class="stat reveal d2">
+          <span class="stat-n">4</span>
+          <span class="stat-l">estaciones</span>
+        </div>
+        <div class="stat reveal d3">
+          <span class="stat-n">∞</span>
+          <span class="stat-l">encuentros</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     GASTRONOMÍA
+══════════════════════════════════ -->
+<section id="gastronomia">
+  <div class="sec-header">
+    <span class="sec-label reveal">Lo que servimos</span>
+    <h2 class="reveal d1">Gastronomía de montaña</h2>
+    <p class="reveal d2">
+      Platos pensados para el clima de la cordillera: contundentes,
+      aromáticos y elaborados con ingredientes de la zona.
+    </p>
+  </div>
+
+  <!-- Platos principales -->
+  <div class="platos-grid">
+    <div class="plato-card reveal">
+      <img src="assets/images/comida_1_Trucha_arcoiris_ensalada_de_estacion.png"
+           alt="Trucha arcoíris con ensalada de estación" loading="lazy" />
+      <div class="plato-label">Trucha arcoíris · Ensalada de estación</div>
+    </div>
+    <div class="plato-card reveal d1">
+      <img src="assets/images/comida_2_Crepes_con_helado_artesanal_o_pie_de_limon.png"
+           alt="Crêpes con helado artesanal o pie de limón" loading="lazy" />
+      <div class="plato-label">Crêpes con helado artesanal</div>
+    </div>
+    <div class="plato-card reveal d2">
+      <img src="assets/images/comida_3_trilogia_de_sorrentinos_y_ravioles_en_salsa_pesto_nuez_de_la_casa.png"
+           alt="Trilogía de sorrentinos y ravioles en salsa pesto con nuez de la casa" loading="lazy" />
+      <div class="plato-label">Trilogía de sorrentinos · Pesto de nuez de la casa</div>
+    </div>
+  </div>
+
+  <!-- Tragos -->
+  <div class="tragos-row">
+    <div class="trago-card reveal d1">
+      <img src="assets/images/tragos_tropical_gin.png" alt="Tropical Gin — cóctel de la casa" loading="lazy" />
+      <div class="trago-info">
+        <span class="trago-tag">Cócteles de autor</span>
+        <span class="trago-name">Tropical Gin</span>
+      </div>
+    </div>
+    <div class="trago-card reveal d2" style="background:var(--carbon); display:flex; align-items:center; justify-content:center; min-height:300px;">
+      <div style="text-align:center; padding:2.5rem;">
+        <span class="sec-label" style="display:block; margin-bottom:1rem;">Bar Trafwe</span>
+        <p style="font-family:var(--font-disp); font-size:1.6rem; font-weight:300; font-style:italic; line-height:1.4; color:var(--nieve);">
+          "Un buen trago al calor de la cordillera."
+        </p>
+        <div class="divider" style="margin:1.5rem auto;"></div>
+        <p style="font-size:.82rem; line-height:1.8; color:rgba(245,240,232,.5);">
+          Carta de vinos, cócteles artesanales<br />y bebestibles seleccionados.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     CABAÑAS
+══════════════════════════════════ -->
+<section id="cabanas">
+  <div class="sec-header">
+    <span class="sec-label reveal">Alojamiento</span>
+    <h2 class="reveal d1">Descanso en la montaña</h2>
+    <p class="reveal d2">
+      Dos opciones de hospedaje para que prolongues la experiencia Trafwe.
+      Madera, silencio, nieve y estrellas.
+    </p>
+  </div>
+
+  <div class="cabanas-grid">
+    <!-- Cabaña -->
+    <div class="cabana-block reveal">
+      <h3>Cabaña de montaña</h3>
+      <div class="season-pair">
+        <div class="season-img">
+          <img src="assets/images/cabana.jpeg" alt="Cabaña Trafwe en verano" loading="lazy" />
+          <span class="season-tag">Verano</span>
+        </div>
+        <div class="season-img">
+          <img src="assets/images/cabananieve.png" alt="Cabaña Trafwe en invierno" loading="lazy" />
+          <span class="season-tag">Invierno</span>
+        </div>
+      </div>
+      <p style="margin-top:1.2rem; font-size:.88rem; line-height:1.85; color:rgba(245,240,232,.5);">
+        Calidez de madera y amplias ventanas con vista a la cordillera.
+        Perfecta para grupos y familias que buscan reconectarse con la naturaleza.
+      </p>
+    </div>
+
+    <!-- Tiny House -->
+    <div class="cabana-block reveal d1">
+      <h3>Tiny House</h3>
+      <div class="season-pair">
+        <div class="season-img">
+          <img src="assets/images/tinyhouse.jpeg" alt="Tiny House Trafwe en otoño" loading="lazy" />
+          <span class="season-tag">Otoño</span>
+        </div>
+        <div class="season-img">
+          <img src="assets/images/tinyhousenieve.png" alt="Tiny House Trafwe en invierno con nieve" loading="lazy" />
+          <span class="season-tag">Invierno</span>
+        </div>
+      </div>
+      <p style="margin-top:1.2rem; font-size:.88rem; line-height:1.85; color:rgba(245,240,232,.5);">
+        Diseño contemporáneo, minimalista y cálido. Ideal para parejas
+        que quieran vivir una experiencia íntima rodeados de bosque y nieve.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     GALERÍA
+══════════════════════════════════ -->
+<section id="galeria">
+  <div class="galeria-header">
+    <span class="sec-label reveal">Galería</span>
+    <h2 class="reveal d1">Imágenes de Trafwe</h2>
+  </div>
+
+  <div class="masonry">
+    <img src="assets/images/trafwe_foto_cielo.png"    alt="Atardecer en Trafwe" loading="lazy" />
+    <img src="assets/images/comida_1_Trucha_arcoiris_ensalada_de_estacion.png" alt="Trucha arcoíris" loading="lazy" />
+    <img src="assets/images/tinyhouse.jpeg"           alt="Tiny House" loading="lazy" />
+    <img src="assets/images/tragos_tropical_gin.png"  alt="Gin tropical" loading="lazy" />
+    <img src="assets/images/cabana.jpeg"              alt="Cabaña de montaña" loading="lazy" />
+    <img src="assets/images/comida_3_trilogia_de_sorrentinos_y_ravioles_en_salsa_pesto_nuez_de_la_casa.png" alt="Sorrentinos pesto" loading="lazy" />
+    <img src="assets/images/tinyhousenieve.png"       alt="Tiny house nevada" loading="lazy" />
+    <img src="assets/images/comida_2_Crepes_con_helado_artesanal_o_pie_de_limon.png" alt="Crêpes" loading="lazy" />
+    <img src="assets/images/cabananieve.png"          alt="Cabaña nevada" loading="lazy" />
+    <img src="assets/images/logo_trafwe_exterior.png" alt="Logo exterior Trafwe" loading="lazy" />
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     UBICACIÓN
+══════════════════════════════════ -->
+<section id="ubicacion">
+  <div class="ubicacion-inner">
+    <span class="sec-label reveal">¿Cómo llegar?</span>
+    <h2 class="reveal d1">
+      Encuéntranos en<br />Malalcahuello
+    </h2>
+    <p class="reveal d2">
+      A solo 90 km de Temuco por la Ruta 181, en el corazón de la
+      Cordillera de los Andes. El camino ya es parte de la experiencia.
+    </p>
+    <div class="address reveal d2">
+      <span>Malalcahuello, Curacautín</span>
+      <span>Región de La Araucanía, Chile</span>
+    </div>
+    <a class="btn-map reveal d3"
+       href="https://maps.app.goo.gl/E2eqrYHEqk7Czc8T9"
+       target="_blank" rel="noopener">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
+      </svg>
+      Abrir en Google Maps
+    </a>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     CIERRE / CTA
+══════════════════════════════════ -->
+<section id="cierre">
+  <div class="cierre-bg">
+    <img src="assets/images/trafwe_foto_cielo.png" alt="Cielo en Trafwe" />
+  </div>
+  <div class="cierre-overlay"></div>
+
+  <div class="cierre-content">
+    <h2 class="reveal">
+      Ven a <em>encontrarte</em><br />con nosotros
+    </h2>
+    <p class="reveal d1">
+      Trafwe te espera con la mesa puesta, la chimenea encendida
+      y la montaña como horizonte.
+    </p>
+    <div class="cierre-btns">
+      <a href="https://www.instagram.com/trafwe_malalcahuello"
+         target="_blank" rel="noopener"
+         class="btn-ig reveal d1">
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
+          <rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r=".5" fill="currentColor"/>
+        </svg>
+        Instagram
+      </a>
+      <a href="https://maps.app.goo.gl/E2eqrYHEqk7Czc8T9"
+         target="_blank" rel="noopener"
+         class="btn-prim reveal d2">
+        Cómo llegar
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════
+     FOOTER
+══════════════════════════════════ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-logo">
+      <img src="assets/images/logo.png" alt="Trafwe" />
+      <span>TRAFWE</span>
+    </div>
+    <p class="footer-copy">
+      © 2025 Trafwe · Malalcahuello, Chile · Lugar de Encuentro
+    </p>
+    <div class="footer-links">
+      <a href="https://www.instagram.com/trafwe_malalcahuello" target="_blank" rel="noopener">Instagram</a>
+      <a href="#gastronomia">Gastronomía</a>
+      <a href="https://maps.app.goo.gl/E2eqrYHEqk7Czc8T9" target="_blank" rel="noopener">Ubicación</a>
+    </div>
+  </div>
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
