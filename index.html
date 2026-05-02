@@ -27,15 +27,13 @@
 ══════════════════════════════════ -->
 <header>
   <a href="#hero" class="logo-header" aria-label="Trafwe inicio">
-    <img src="assets/images/logo.png" alt="Trafwe logo" />
-    <span class="brand">TRAFWE</span>
+    <img src="assets/images/logo.png" alt="Trafwe logo" class="logo-header-img" />
   </a>
 
   <nav aria-label="Navegación principal">
     <a href="#sobre">Nosotros</a>
     <a href="#gastronomia">Gastronomía</a>
     <a href="#cabanas">Cabañas</a>
-    <a href="#galeria">Galería</a>
     <a href="#ubicacion" class="nav-cta">¿Cómo llegar?</a>
   </nav>
 
@@ -49,7 +47,6 @@
   <a href="#sobre">Nosotros</a>
   <a href="#gastronomia">Gastronomía</a>
   <a href="#cabanas">Cabañas</a>
-  <a href="#galeria">Galería</a>
   <a href="#ubicacion">¿Cómo llegar?</a>
 </nav>
 
@@ -89,42 +86,26 @@
 
 <!-- ══════════════════════════════════
      VIDEO SCROLL
-     ─────────────────────────────────
-     Configura data-total con el número
-     de frames que generaste con ffmpeg.
-     data-w / data-h = resolución de los frames.
-     Si data-total="0" o no hay frames,
-     se muestra automáticamente el video
-     como fallback.
+     video.currentTime controlado por scroll
+     Formato 16:9 horizontal, centrado
 ══════════════════════════════════ -->
-<section id="video-scroll"
-         data-total="0"
-         data-w="540"
-         data-h="960">
-
+<section id="video-scroll">
   <div class="video-sticky">
-    <div class="video-frame">
-
-      <!-- Canvas para los frames (scroll animation) -->
-      <canvas id="frame-canvas" aria-hidden="true"></canvas>
-
-      <!-- Fallback: video normal (visible cuando no hay frames) -->
-      <video class="v-fallback" autoplay muted loop playsinline
-             aria-label="Video Trafwe">
+    <div class="video-frame-16-9">
+      <video id="scroll-video" muted playsinline preload="auto"
+             aria-label="Video Trafwe — controlado por scroll">
         <source src="assets/videos/scroll.mp4" type="video/mp4" />
-        <img src="assets/images/trafwe_foto_cielo.png" alt="Trafwe exterior" />
       </video>
 
-      <!-- Captions que aparecen progresivamente -->
       <div class="vscroll-captions" aria-hidden="true">
-        <p class="vcap">La montaña como escenario…</p>
-        <p class="vcap">El fuego como vínculo…</p>
-        <p class="vcap">La mesa como punto de encuentro.</p>
-        <p class="vcap">Bienvenido a Trafwe.</p>
+        <p class="vcap" data-from="0" data-to="0.25">La montaña como escenario…</p>
+        <p class="vcap" data-from="0.25" data-to="0.5">El fuego como vínculo…</p>
+        <p class="vcap" data-from="0.5" data-to="0.75">La mesa como punto de encuentro.</p>
+        <p class="vcap" data-from="0.75" data-to="1">Bienvenido a Trafwe.</p>
       </div>
     </div>
 
-    <div class="vscroll-hint" aria-hidden="true">Desliza para explorar</div>
+    <div class="vscroll-hint" id="vscroll-hint" aria-hidden="true">Desliza para explorar</div>
   </div>
 </section>
 
@@ -268,11 +249,11 @@
       <h3>Cabaña de montaña</h3>
       <div class="season-pair">
         <div class="season-img">
-          <img src="assets/images/cabana.jpeg" alt="Cabaña Trafwe en verano" loading="lazy" />
+          <img src="assets/images/cabaña.jpeg" alt="Cabaña Trafwe en verano" loading="lazy" />
           <span class="season-tag">Verano</span>
         </div>
         <div class="season-img">
-          <img src="assets/images/cabananieve.png" alt="Cabaña Trafwe en invierno" loading="lazy" />
+          <img src="assets/images/cabañanieve.png" alt="Cabaña Trafwe en invierno" loading="lazy" />
           <span class="season-tag">Invierno</span>
         </div>
       </div>
@@ -304,29 +285,6 @@
 </section>
 
 <!-- ══════════════════════════════════
-     GALERÍA
-══════════════════════════════════ -->
-<section id="galeria">
-  <div class="galeria-header">
-    <span class="sec-label reveal">Galería</span>
-    <h2 class="reveal d1">Imágenes de Trafwe</h2>
-  </div>
-
-  <div class="masonry">
-    <img src="assets/images/trafwe_foto_cielo.png"    alt="Atardecer en Trafwe" loading="lazy" />
-    <img src="assets/images/comida_1_Trucha_arcoiris_ensalada_de_estacion.png" alt="Trucha arcoíris" loading="lazy" />
-    <img src="assets/images/tinyhouse.jpeg"           alt="Tiny House" loading="lazy" />
-    <img src="assets/images/tragos_tropical_gin.png"  alt="Gin tropical" loading="lazy" />
-    <img src="assets/images/cabana.jpeg"              alt="Cabaña de montaña" loading="lazy" />
-    <img src="assets/images/comida_3_trilogia_de_sorrentinos_y_ravioles_en_salsa_pesto_nuez_de_la_casa.png" alt="Sorrentinos pesto" loading="lazy" />
-    <img src="assets/images/tinyhousenieve.png"       alt="Tiny house nevada" loading="lazy" />
-    <img src="assets/images/comida_2_Crepes_con_helado_artesanal_o_pie_de_limon.png" alt="Crêpes" loading="lazy" />
-    <img src="assets/images/cabananieve.png"          alt="Cabaña nevada" loading="lazy" />
-    <img src="assets/images/logo_trafwe_exterior.png" alt="Logo exterior Trafwe" loading="lazy" />
-  </div>
-</section>
-
-<!-- ══════════════════════════════════
      UBICACIÓN
 ══════════════════════════════════ -->
 <section id="ubicacion">
@@ -343,10 +301,24 @@
       <span>Malalcahuello, Curacautín</span>
       <span>Región de La Araucanía, Chile</span>
     </div>
-    <a class="btn-map reveal d3"
+  </div>
+
+  <!-- Mapa embebido -->
+  <div class="mapa-wrapper reveal">
+    <iframe
+      title="Ubicación Trafwe en Google Maps"
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3097.823498721234!2d-71.61660000000001!3d-38.46270000000001!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x9614d3a7c8b6e94b%3A0x1f9a2c3d4e5f6a7b!2sMalalcahuello%2C%20Curacaut%C3%ADn%2C%20Araucan%C3%ADa%2C%20Chile!5e0!3m2!1ses!2scl!4v1699000000000!5m2!1ses!2scl"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+
+  <div class="ubicacion-btn reveal d1">
+    <a class="btn-map"
        href="https://maps.app.goo.gl/E2eqrYHEqk7Czc8T9"
        target="_blank" rel="noopener">
-      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
         <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/>
       </svg>
       Abrir en Google Maps
