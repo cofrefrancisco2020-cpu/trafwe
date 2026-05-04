@@ -7,6 +7,151 @@
   <title>Trafwe — Lugar de Encuentro · Malalcahuello</title>
   <link rel="stylesheet" href="style.css" />
 
+  <style>
+    /* ═══════ FRAME SCROLL SECTION ═══════ */
+    #scroll-section {
+      position: relative;
+      height: 600vh;
+      background: var(--negro, #0d0d0b);
+    }
+    #sticky-stage {
+      position: sticky;
+      top: 0;
+      width: 100vw;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;    /* centrado horizontal */
+    }
+    /* Canvas: ocupa un contenedor centrado, más pequeño que fullscreen */
+    #frame-canvas {
+      display: block;
+      width: min(85vw, 960px);
+      height: auto;
+      aspect-ratio: 16 / 9;
+      position: relative;
+      /* Anula position:absolute si style.css lo tenía */
+    }
+    /* Fallback video (oculto por defecto; aparece si frames fallan) */
+    #frame-fallback {
+      display: none;
+      width: min(85vw, 960px);
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
+    /* Scroll hint dentro del sticky-stage */
+    #scroll-hint {
+      position: absolute;
+      bottom: 2.2rem;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: .58rem;
+      letter-spacing: .3em;
+      text-transform: uppercase;
+      color: rgba(245,240,232,.4);
+      transition: opacity .4s;
+      font-family: 'Jost', sans-serif;
+    }
+    #scroll-hint.gone { opacity: 0; pointer-events: none; }
+
+    /* Captions sobre el stage */
+    .vscroll-captions {
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 5;
+    }
+    .vcap {
+      position: absolute;
+      bottom: 3rem;
+      left: 3rem;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-style: italic;
+      font-size: clamp(1rem, 2.2vw, 1.6rem);
+      font-weight: 300;
+      color: #f5f0e8;
+      text-shadow: 0 2px 24px rgba(0,0,0,.75);
+      opacity: 0;
+      transform: translateY(8px);
+      transition: opacity .45s, transform .45s;
+    }
+    .vcap.active { opacity: 1; transform: none; }
+
+    /* Móvil: reducir tamaño del frame */
+    @media (max-width: 600px) {
+      #frame-canvas,
+      #frame-fallback {
+        width: 92vw;
+      }
+    }
+
+    /* ═══════ GALERÍA GRID ═══════ */
+    .galeria-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: .7rem;
+      padding: 0 1.5rem;
+    }
+    .galeria-grid img {
+      width: 100%;
+      aspect-ratio: 4 / 3;
+      object-fit: cover;
+      display: block;
+      transition: opacity .3s;
+    }
+    .galeria-grid img:hover { opacity: .85; }
+
+    @media (max-width: 700px) {
+      .galeria-grid {
+        grid-template-columns: repeat(2, 1fr);
+        gap: .5rem;
+      }
+    }
+    @media (max-width: 420px) {
+      .galeria-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ═══════ MAPA — visible en móvil ═══════ */
+    .mapa-wrapper {
+      max-width: 960px;
+      margin: 2.5rem auto 0;
+      /* Aspect ratio para que el iframe tenga altura proporcional */
+      position: relative;
+      padding-bottom: 45%;   /* 16:7 aprox */
+      height: 0;
+      overflow: hidden;
+    }
+    .mapa-wrapper iframe {
+      position: absolute;
+      top: 0; left: 0;
+      width: 100% !important;
+      height: 100% !important;
+      border: 0;
+    }
+    @media (max-width: 600px) {
+      .mapa-wrapper {
+        padding-bottom: 75%;  /* más alto en móvil */
+        margin: 1.5rem 1rem 0;
+      }
+    }
+
+    .ubicacion-btn {
+      text-align: center;
+      padding: 2.5rem 0 5rem;
+    }
+
+    /* ═══════ LOADER hidden ═══════ */
+    #loader.hidden {
+      opacity: 0;
+      visibility: hidden;
+      pointer-events: none;
+      transition: opacity .6s, visibility .6s;
+    }
+  </style>
+
   <!-- Preconnect fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -88,43 +233,29 @@
 </section>
 
 <!-- ══════════════════════════════════
-     VIDEO SCROLL
-     ─────────────────────────────────
-     Configura data-total con el número
-     de frames que generaste con ffmpeg.
-     data-w / data-h = resolución de los frames.
-     Si data-total="0" o no hay frames,
-     se muestra automáticamente el video
-     como fallback.
+     VIDEO SCROLL — FRAMES
+     137 frames en assets/frames/
+     frames_0001.png … frames_0137.png
 ══════════════════════════════════ -->
-<section id="video-scroll"
-         data-total="0"
-         data-w="540"
-         data-h="960">
+<section id="scroll-section">
+  <div id="sticky-stage">
+    <canvas id="frame-canvas" aria-hidden="true"></canvas>
 
-  <div class="video-sticky">
-    <div class="video-frame">
+    <!-- Fallback móvil: video normal si frames fallan -->
+    <video id="frame-fallback" class="frame-fallback" autoplay muted loop playsinline
+           aria-label="Video Trafwe">
+      <source src="assets/videos/scroll.mp4" type="video/mp4" />
+    </video>
 
-      <!-- Canvas para los frames (scroll animation) -->
-      <canvas id="frame-canvas" aria-hidden="true"></canvas>
-
-      <!-- Fallback: video normal (visible cuando no hay frames) -->
-      <video class="v-fallback" autoplay muted loop playsinline
-             aria-label="Video Trafwe">
-        <source src="assets/videos/scroll.mp4" type="video/mp4" />
-        <img src="assets/images/trafwe_foto_cielo.jpeg" alt="Trafwe exterior" />
-      </video>
-
-      <!-- Captions que aparecen progresivamente -->
-      <div class="vscroll-captions" aria-hidden="true">
-        <p class="vcap">La montaña como escenario…</p>
-        <p class="vcap">El fuego como vínculo…</p>
-        <p class="vcap">La mesa como punto de encuentro.</p>
-        <p class="vcap">Bienvenido a Trafwe.</p>
-      </div>
+    <!-- Captions progresivos -->
+    <div class="vscroll-captions" aria-hidden="true">
+      <p class="vcap" data-from="0"    data-to="0.25">La montaña como escenario…</p>
+      <p class="vcap" data-from="0.25" data-to="0.5" >El fuego como vínculo…</p>
+      <p class="vcap" data-from="0.5"  data-to="0.75">La mesa como punto de encuentro.</p>
+      <p class="vcap" data-from="0.75" data-to="1"   >Bienvenido a Trafwe.</p>
     </div>
 
-    <div class="vscroll-hint" aria-hidden="true">Desliza para explorar</div>
+    <div id="scroll-hint" aria-hidden="true">Desliza para explorar</div>
   </div>
 </section>
 
@@ -312,16 +443,12 @@
     <h2 class="reveal d1">Imágenes de Trafwe</h2>
   </div>
 
-  <div class="masonry">
+  <div class="galeria-grid">
     <img src="assets/images/trafwe_foto_cielo.jpeg"    alt="Atardecer en Trafwe" loading="lazy" />
-    <img src="assets/images/comida_1_Trucha_arcoiris_ensalada_de_estacion.png" alt="Trucha arcoíris" loading="lazy" />
-    <img src="assets/images/tinyhouse.jpeg"           alt="Tiny House" loading="lazy" />
     <img src="assets/images/tragos_tropical_gin.png"  alt="Gin tropical" loading="lazy" />
-    <img src="assets/images/cabana.jpeg"              alt="Cabaña de montaña" loading="lazy" />
-    <img src="assets/images/comida_3_trilogia_de_sorrentinos_y_ravioles_en_salsa_pesto_nuez_de_la_casa.png" alt="Sorrentinos pesto" loading="lazy" />
-    <img src="assets/images/tinyhousenieve.png"       alt="Tiny house nevada" loading="lazy" />
+    <img src="assets/images/comida_1_Trucha_arcoiris_ensalada_de_estacion.png" alt="Trucha arcoíris" loading="lazy" />
     <img src="assets/images/comida_2_Crepes_con_helado_artesanal_o_pie_de_limon.png" alt="Crêpes" loading="lazy" />
-    <img src="assets/images/cabananieve.png"          alt="Cabaña nevada" loading="lazy" />
+    <img src="assets/images/comida_3_trilogia_de_sorrentinos_y_ravioles_en_salsa_pesto_nuez_de_la_casa.png" alt="Sorrentinos pesto" loading="lazy" />
     <img src="assets/images/logo_trafwe_exterior.png" alt="Logo exterior Trafwe" loading="lazy" />
   </div>
 </section>
@@ -343,7 +470,21 @@
       <span>Malalcahuello, Curacautín</span>
       <span>Región de La Araucanía, Chile</span>
     </div>
-    <a class="btn-map reveal d3"
+  </div>
+
+  <!-- Mapa embebido — visible en desktop y móvil -->
+  <div class="mapa-wrapper reveal">
+    <iframe
+      src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2968.9840638216638!2d-71.5514546!3d-38.4753202!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x966cca9480b9a095%3A0x9c3ac83e2b33fc55!2sTrafwe!5e1!3m2!1ses-419!2scl!4v1777916553824!5m2!1ses-419!2scl"
+      title="Ubicación Trafwe"
+      allowfullscreen=""
+      loading="lazy"
+      referrerpolicy="no-referrer-when-downgrade">
+    </iframe>
+  </div>
+
+  <div class="ubicacion-btn reveal d1">
+    <a class="btn-map"
        href="https://maps.app.goo.gl/E2eqrYHEqk7Czc8T9"
        target="_blank" rel="noopener">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -409,6 +550,199 @@
   </div>
 </footer>
 
-<script src="script.js"></script>
+<script>
+/* ═══════════════════════════════════════════
+   TRAFWE — script unificado
+   Frames: assets/frames/frames_0001.png … frames_0137.png
+═══════════════════════════════════════════ */
+'use strict';
+
+// ── NAV ─────────────────────────────────────
+const headerEl  = document.querySelector('header');
+const burger    = document.getElementById('burger');
+const mobileNav = document.getElementById('mobile-nav');
+
+window.addEventListener('scroll', () => {
+  headerEl.classList.toggle('scrolled', window.scrollY > 60);
+  const hint = document.getElementById('hero-scroll-hint');
+  if (hint && window.scrollY > 80) hint.classList.add('gone');
+}, { passive: true });
+
+burger && burger.addEventListener('click', () => {
+  burger.classList.toggle('open');
+  mobileNav.classList.toggle('open');
+  document.body.style.overflow = mobileNav.classList.contains('open') ? 'hidden' : '';
+});
+
+document.querySelectorAll('.mobile-nav a').forEach(a => {
+  a.addEventListener('click', () => {
+    burger.classList.remove('open');
+    mobileNav.classList.remove('open');
+    document.body.style.overflow = '';
+  });
+});
+
+// ── REVEAL ON SCROLL ────────────────────────
+const revealObserver = new IntersectionObserver((entries) => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      e.target.classList.add('visible');
+      revealObserver.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.1 });
+document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+
+// ── FRAME SCROLL ─────────────────────────────
+(() => {
+  const TOTAL_FRAMES = 137;
+  const FRAMES_DIR   = 'assets/frames/';
+  const PAD          = n => String(n).padStart(4, '0');
+
+  const canvas  = document.getElementById('frame-canvas');
+  const section = document.getElementById('scroll-section');
+  const loaderEl= document.getElementById('loader');
+  const fillEl  = document.getElementById('loader-fill');
+  const pctEl   = document.getElementById('loader-pct');
+  const hintEl  = document.getElementById('scroll-hint');
+  const fallback= document.getElementById('frame-fallback');
+  const captions= document.querySelectorAll('#scroll-section .vcap');
+
+  if (!canvas || !section) return;
+
+  const ctx = canvas.getContext('2d', { alpha: false });
+
+  // ── Detectar si es móvil pequeño ──
+  const isMobileSmall = () => window.innerWidth < 600;
+
+  // ── Tamaño del canvas ──
+  let dpr, vpW, vpH;
+  function sizeCanvas() {
+    dpr = window.devicePixelRatio || 1;
+    vpW = canvas.parentElement.clientWidth;
+    vpH = canvas.parentElement.clientHeight;
+    canvas.style.width  = vpW + 'px';
+    canvas.style.height = vpH + 'px';
+    canvas.width  = Math.round(vpW * dpr);
+    canvas.height = Math.round(vpH * dpr);
+    ctx.scale(dpr, dpr);
+  }
+
+  // ── Dibujar frame con cover-fit ──
+  // Asumimos que los frames son 16:9 (landscape); ajustar NATIVE_W/H si difiere
+  const NATIVE_W = 1920;
+  const NATIVE_H = 1080;
+
+  function drawCover(img) {
+    if (!img || !img.naturalWidth) return;
+    const imgAspect    = img.naturalWidth / img.naturalHeight;
+    const canvasAspect = vpW / vpH;
+    let srcX, srcY, srcW, srcH;
+    if (canvasAspect > imgAspect) {
+      srcW = img.naturalWidth;
+      srcH = img.naturalWidth / canvasAspect;
+      srcX = 0;
+      srcY = (img.naturalHeight - srcH) / 2;
+    } else {
+      srcH = img.naturalHeight;
+      srcW = img.naturalHeight * canvasAspect;
+      srcY = 0;
+      srcX = (img.naturalWidth - srcW) / 2;
+    }
+    ctx.drawImage(img, srcX, srcY, srcW, srcH, 0, 0, vpW, vpH);
+  }
+
+  // ── Métricas de scroll ──
+  let sectionTop = 0, scrollRange = 0;
+  function updateMetrics() {
+    sectionTop  = section.offsetTop;
+    scrollRange = section.offsetHeight - window.innerHeight;
+  }
+
+  // ── Precargar frames ──
+  const frames = new Array(TOTAL_FRAMES);
+  let loadedCount = 0;
+
+  function preload() {
+    return new Promise(resolve => {
+      for (let i = 0; i < TOTAL_FRAMES; i++) {
+        const img = new Image();
+        img.onload = img.onerror = () => {
+          loadedCount++;
+          const p = Math.round((loadedCount / TOTAL_FRAMES) * 100);
+          if (fillEl) fillEl.style.width = p + '%';
+          if (pctEl)  pctEl.textContent  = p + '%';
+          if (loadedCount === TOTAL_FRAMES) resolve();
+        };
+        img.src = FRAMES_DIR + 'frames_' + PAD(i + 1) + '.png';
+        frames[i] = img;
+      }
+    });
+  }
+
+  // ── Dibujar frame por índice ──
+  let currentIdx = -1;
+  function draw(idx) {
+    if (idx === currentIdx) return;
+    currentIdx = idx;
+    drawCover(frames[idx]);
+
+    // Captions
+    const progress = idx / (TOTAL_FRAMES - 1);
+    captions.forEach(cap => {
+      const from = parseFloat(cap.dataset.from);
+      const to   = parseFloat(cap.dataset.to);
+      cap.classList.toggle('active', progress >= from && progress < to);
+    });
+  }
+
+  // ── Scroll handler ──
+  let rafPending = false, nextIdx = 0;
+  function onScroll() {
+    const scrolled = window.scrollY - sectionTop;
+    const progress = Math.max(0, Math.min(1, scrolled / scrollRange));
+    nextIdx = Math.min(TOTAL_FRAMES - 1, Math.floor(progress * TOTAL_FRAMES));
+    if (scrolled > 20 && hintEl) hintEl.classList.add('gone');
+    if (!rafPending) {
+      rafPending = true;
+      requestAnimationFrame(() => { draw(nextIdx); rafPending = false; });
+    }
+  }
+
+  window.addEventListener('resize', () => {
+    sizeCanvas(); updateMetrics();
+    const saved = currentIdx < 0 ? 0 : currentIdx;
+    currentIdx = -1; draw(saved);
+  }, { passive: true });
+
+  // ── Iniciar ──
+  sizeCanvas();
+
+  preload().then(() => {
+    // Ocultar fallback, mostrar canvas
+    if (fallback) fallback.style.display = 'none';
+    canvas.style.display = 'block';
+
+    updateMetrics();
+    currentIdx = -1;
+    draw(0);
+    if (loaderEl) loaderEl.classList.add('hidden');
+    onScroll();
+    window.addEventListener('scroll', onScroll, { passive: true });
+  }).catch(() => {
+    // Si los frames fallan → mostrar fallback, ocultar canvas
+    canvas.style.display = 'none';
+    if (fallback) fallback.style.display = 'block';
+    if (loaderEl) loaderEl.classList.add('hidden');
+  });
+
+  // Ocultar loader tras timeout de seguridad
+  setTimeout(() => {
+    if (loaderEl && !loaderEl.classList.contains('hidden')) {
+      loaderEl.classList.add('hidden');
+    }
+  }, 8000);
+})();
+</script>
 </body>
 </html>
